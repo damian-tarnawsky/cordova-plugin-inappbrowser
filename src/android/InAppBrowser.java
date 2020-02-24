@@ -904,7 +904,9 @@ public class InAppBrowser extends CordovaPlugin {
                 // WebView
                 inAppWebView = new WebView(cordova.getActivity());
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                params.setMargins(0,0,0,150);
+                footer.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                int height = footer.getMeasuredHeight();
+                params.setMargins(0,0,0,height);
                 inAppWebView.setLayoutParams(params);
                 inAppWebView.setId(Integer.valueOf(6));
                 // File Chooser Implemented ChromeClient
