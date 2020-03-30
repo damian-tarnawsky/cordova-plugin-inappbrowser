@@ -136,8 +136,10 @@ exports.defineAutoTests = function () {
                     verifyEvent(evt, 'exit');
                     done();
                 });
-                iabInstance.close();
-                iabInstance = null;
+                iabInstance.addEventListener('loadstop', function (evt) {
+                    iabInstance.close();
+                    iabInstance = null;
+                });
             });
 
             it('inappbrowser.spec.6 should support loaderror event', function (done) {
@@ -180,24 +182,13 @@ exports.defineAutoTests = function () {
             });
         });
     };
-    if (isIos) {
-        createTests('usewkwebview=no');
-        createTests('usewkwebview=yes');
-    } else {
-        createTests();
-    }
+    createTests();
 };
 
 exports.defineManualTests = function (contentEl, createActionButton) {
 
     var platformOpts = '';
     var platform_info = '';
-    if (isIos) {
-        platformOpts = 'usewkwebview=no';
-        platform_info = '<h1>Webview</h1>' +
-            '<p>Use this button to toggle the Webview implementation.</p>' +
-            '<div id="webviewToggle"></div>';
-    }
 
     function doOpen (url, target, params, numExpectedRedirects, useWindowOpen) {
         numExpectedRedirects = numExpectedRedirects || 0;
@@ -541,20 +532,6 @@ exports.defineManualTests = function (contentEl, createActionButton) {
     var injectjs = isWindows ? basePath + 'inject.js' : 'inject.js';
     var injectcss = isWindows ? basePath + 'inject.css' : 'inject.css';
     var videohtml = basePath + 'video.html';
-    if (isIos) {
-        createActionButton('Webview=UIWebView', function () {
-            var webviewOption = 'usewkwebview=';
-            var webviewToggle = document.getElementById('webviewToggle');
-            var button = webviewToggle.getElementsByClassName('topcoat-button')[0];
-            if (platformOpts === webviewOption + 'yes') {
-                platformOpts = webviewOption + 'no';
-                button.textContent = 'Webview=UIWebView';
-            } else {
-                platformOpts = webviewOption + 'yes';
-                button.textContent = 'Webview=WKWebView';
-            }
-        }, 'webviewToggle');
-    }
 
     // Local
     createActionButton('target=Default', function () {
